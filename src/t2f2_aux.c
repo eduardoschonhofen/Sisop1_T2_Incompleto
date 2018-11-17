@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "apidisk.h"
-#include "t2fs.h"
+#include "../include/apidisk.h"
+#include "../include/t2fs.h"
 
 #define MAX_ARQUIVOS_ABERTOS 10
 #define MAX_DIRETORIOS_ABERTOS 10

@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "apidisk.h"
-#include "t2fs.h"
-#include "t2fs_aux.h"
+#include "../include/apidisk.h"
+#include "../include/t2fs.h"
+#include "t2f2_aux.c"
 
 
 int identify2 (char *name, int size);
