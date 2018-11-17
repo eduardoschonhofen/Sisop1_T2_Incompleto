@@ -10,13 +10,13 @@
 #define TRUE 1
 
 struct t2fs_info{
-  DWORD SectorPerCluster;
+  DWORD SectorsPerCluster;
   DWORD FATSectorStart;
   DWORD RootDirCluster;
   DWORD DataSectorStart;
   DWORD numClusters; // NofSectors - DataSectorStart
   DWORD FATEntriesPerSector; // SECTOR_SIZE / sizeof(DWORD)
-  DWORD clusterSize; // SectorPerCluster * SECTOR_SIZE
+  DWORD clusterSize; // SectorsPerCluster * SECTOR_SIZE
   DWORD fileEntriesPerCluster; // ClusterSize /sizeof(struct registro)
 };
 
@@ -25,17 +25,17 @@ typedef struct t2fs_superbloco superBloco;
 typedef struct t2fs_record Registro;
 struct t2fs_info bloco= {};
 
-typedef struct t2fs_openfile{
-  Registro register;
-} arquivosAbertos;
-
+struct t2fs_openfile{
+  struct t2fs_record Register;
+};
+typedef struct t2fs_openfile arquivosAbertos;
 
 
 
 //Variavveis globais //
 arquivosAbertos  arquivos[MAX_ARQUIVOS_ABERTOS];
 arquivosAbertos  diretorios[MAX_DIRETORIOS_ABERTOS];
-bool inicializouT2FS = FALSE;
+int inicializouT2FS = FALSE;
 DWORD clusterAtual;
 char currentPath[MAX_FILE_NAME_SIZE+1];
 superBloco superbloco;
@@ -87,13 +87,13 @@ return 0;
 
 void inicializaBloco()
 {
-  bloco.SectorPerCluster = superbloco.SectorPerCluster;
+  bloco.SectorsPerCluster = superbloco.SectorsPerCluster;
   bloco.FATSectorStart = superbloco.pFATSectorStart;
   bloco.RootDirCluster = superbloco.RootDirCluster;
   bloco.DataSectorStart = superbloco.DataSectorStart;
-  bloco.numClusters = (superbloco.NofSectors - bloco.DataSectorStart)/superbloco.SectorPerCluster;
+  bloco.numClusters = (superbloco.NofSectors - bloco.DataSectorStart)/superbloco.SectorsPerCluster;
   bloco.FATEntriesPerSector = SECTOR_SIZE / sizeof(DWORD);
-  bloco.clusterSize = bloco.SectorPerCluster * SECTOR_SIZE;
+  bloco.clusterSize = bloco.SectorsPerCluster * SECTOR_SIZE;
   bloco.fileEntriesPerCluster = (bloco.clusterSize / sizeof( Registro ));
 
 }
@@ -102,7 +102,7 @@ void iniciarArquivosAbertos()
 {
   int i;
   for(i=0; i <MAX_ARQUIVOS_ABERTOS; i++){
-      arquivos[i].register.TypeVal = TYPEVAL_INVALIDO;
+      arquivos[i].Register.TypeVal = TYPEVAL_INVALIDO;
 
   }
 }
@@ -112,7 +112,7 @@ void iniciarDiretoriosAbertos()
 {
 int i;
 for(i=0; i <MAX_DIRETORIOS_ABERTOS; i++){
-    diretorios[i].register.TypeVal = TYPEVAL_INVALIDO;
+    diretorios[i].Register.TypeVal = TYPEVAL_INVALIDO;
   }
 }
 
@@ -137,7 +137,7 @@ FILE2 buscaHandleArquivoLivre()
   FILE2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_ARQUIVOS_ABERTOS;freeHandle++)
   {
-    if(arquivos[freeHandle].register.TypeVal = TYPEVAL_INVALIDO)
+    if(arquivos[freeHandle].Register.TypeVal = TYPEVAL_INVALIDO)
       return freeHandle;
   }
   return -1;
@@ -148,24 +148,24 @@ DIR2 buscaHandleDirLivre()
   DIR2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_DIRETORIOS_ABERTOS;freeHandle++)
   {
-    if(diretorios[freeHandle].register.TypeVal = TYPEVAL_INVALIDO)
+    if(diretorios[freeHandle].Register.TypeVal = TYPEVAL_INVALIDO)
       return freeHandle;
   }
   return -1;
 }
 
 
-BOOL handleFileValido(FILE2 handle)
+int handleFileValido(FILE2 handle)
 {
-  if(handle < 0 || handle >= MAX_ARQUIVOS_ABERTOS || arquivos[handle].register.TypeVal != TYPEVAL_REGULAR)
+  if(handle < 0 || handle >= MAX_ARQUIVOS_ABERTOS || arquivos[handle].Register.TypeVal != TYPEVAL_REGULAR)
       return FALSE;
   else
       return TRUE;
 }
 
-BOOL handleDIRValido(DIR2 handle)
+int handleDIRValido(DIR2 handle)
 {
-  if(handle < 0 || handle >= MAX_DIRETORIOS_ABERTOS || diretorios[handle].register.TypeVal != TYPEVAL_DIRETORIO)
+  if(handle < 0 || handle >= MAX_DIRETORIOS_ABERTOS || diretorios[handle].Register.TypeVal != TYPEVAL_DIRETORIO)
       return FALSE;
   else
       return TRUE;
