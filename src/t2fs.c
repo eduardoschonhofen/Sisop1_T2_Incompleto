@@ -25,9 +25,14 @@ return 0;
 FILE2 create2(char *filename)
 {
   iniciarT2FS();
+  char teste[4] = "abc";
+  char aux[4];
 
+  escreveCluster(5, teste)
 
+  leCluster(5, aux)
 
+  puts(aux);
   Registro registro;
 
 
