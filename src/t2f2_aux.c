@@ -6,6 +6,8 @@
 
 #define MAX_ARQUIVOS_ABERTOS 10
 #define MAX_DIRETORIOS_ABERTOS 10
+#define FALSE 0
+#define TRUE 1
 
 struct t2fs_info{
   DWORD SectorPerCluster;
@@ -92,7 +94,7 @@ void inicializaBloco()
   bloco.numClusters = (superbloco.NofSectors - bloco.DataSectorStart)/superbloco.SectorPerCluster;
   bloco.FATEntriesPerSector = SECTOR_SIZE / sizeof(DWORD);
   bloco.clusterSize = bloco.SectorPerCluster * SECTOR_SIZE;
-  bloco.fileEntriesPerCluster = (info.clusterSize / sizeof(struct Registro));
+  bloco.fileEntriesPerCluster = (bloco.clusterSize / sizeof( Registro ));
 
 }
 
@@ -112,7 +114,7 @@ int i;
 for(i=0; i <MAX_DIRETORIOS_ABERTOS; i++){
     diretorios[i].register.TypeVal = TYPEVAL_INVALIDO;
 }
-
+}
 
 void buscaCaminhoDoArquivo(char *pathname, char *filename)
 {
