@@ -261,12 +261,12 @@ leCluster(cluster,buffer);
 
 for(j=0;j<(SECTOR_SIZE*superbloco.SectorsPerCluster)/64;j++)
 {
-registro[j].TypeVal=buffer[0*j];
+registro[j].TypeVal=buffer[64*j];
 for(i=0;i<50;i++)
-registro[j].name[i]=buffer[(1+i)*j];
-registro[j].bytesFileSize=*((DWORD*)(buffer + (52*j)));
-registro[j].clustersFileSize=*((DWORD*)(buffer + (56*j)));
-registro[j].firstCluster=*((DWORD*)(buffer + (60*j)));
+registro[j].name[i]=buffer[(1+i)+(j*64)];
+registro[j].bytesFileSize=*((DWORD*)(buffer + (52+(j*64))));
+registro[j].clustersFileSize=*((DWORD*)(buffer + (56+(j*64))));
+registro[j].firstCluster=*((DWORD*)(buffer + (60+(j*64))));
 
 printf("TypeVal:%d\n",registro[j].TypeVal);
 printf("Name:%s\n",registro[j].name);
