@@ -113,7 +113,7 @@ void iniciarDiretoriosAbertos()
 int i;
 for(i=0; i <MAX_DIRETORIOS_ABERTOS; i++){
     diretorios[i].register.TypeVal = TYPEVAL_INVALIDO;
-}
+  }
 }
 
 void buscaCaminhoDoArquivo(char *pathname, char *filename)
