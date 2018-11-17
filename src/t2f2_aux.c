@@ -211,3 +211,31 @@ int escreveCluster(DWORD cluster, BYTE *buffer)
 	}
 	return 0;
 }
+int leFAT(DWORD cluster, DWORD *buffer)
+{
+	int n;
+  BYTE *setor=(BYTE*)malloc(SECTOR_SIZE);
+	DWORD fatAdress =(int) cluster/superbloco.FATEntriesPerSector;
+  if(read_sector(superbloco.pFATSectorStart+fatAdress, setor) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
+    return -1;
+  DWORD adress=cluster%superbloco.FATEntriesPerSector;
+  memcpy(buffer,setor+adress,32);
+  free(setor);
+	return 0;
+}
+
+
+int escreveFAT(DWORD cluster, DWORD *buffer)
+{
+	int n;
+  BYTE *setor=(BYTE*)malloc(SECTOR_SIZE);
+	DWORD fatAdress =(int) cluster/superbloco.FATEntriesPerSector;
+  if(read_sector(superbloco.pFATSectorStart+fatAdress, setor) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
+    return -1;
+  DWORD adress=cluster%superbloco.FATEntriesPerSector;
+  memcpy(setor+adress,buffer,32);
+  if(write_sector(superbloco.pFATSectorStart+fatAdress, setor))
+  return -1;
+  free(setor);
+	return 0;
+}
