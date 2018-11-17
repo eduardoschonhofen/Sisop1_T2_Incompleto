@@ -32,7 +32,8 @@ typedef struct t2fs_openfile{
 
 //Variavveis globais //
 arquivosAbertos  arquivos[MAX_ARQUIVOS_ABERTOS];
-BOOL inicializouT2FS = FALSE
+arquivosAbertos  diretorios[MAX_DIRETORIOS_ABERTOS];
+BOOL inicializouT2FS = FALSE;
 DWORD clusterAtual;
 char currentPath[MAX_FILE_NAME_SIZE+1];
 
@@ -109,7 +110,7 @@ void iniciarDiretoriosAbertos()
 {
 int i;
 for(i=0; i <MAX_DIRETORIOS_ABERTOS; i++){
-    arquivos[i].register.TypeVal = TYPEVAL_INVALIDO;
+    diretorios[i].register.TypeVal = TYPEVAL_INVALIDO;
 }
 
 
@@ -145,7 +146,7 @@ DIR2 buscaHandleDirLivre()
   DIR2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_DIRETORIOS_ABERTOS;freeHandle++)
   {
-    if(arquivos[freeHandle].regsiter.TypeVal = TYPEVAL_INVALIDO)
+    if(diretorios[freeHandle].regsiter.TypeVal = TYPEVAL_INVALIDO)
       return freeHandle;
   }
   return -1;
@@ -162,7 +163,7 @@ BOOL handleFileValido(FILE2 handle)
 
 BOOL handleDIRValido(DIR2 handle)
 {
-  if(handle < 0 || handle >= MAX_DIRETORIOS_ABERTOS || arquivos[handle].register.TypeVal != TYPEVAL_DIRETORIO)
+  if(handle < 0 || handle >= MAX_DIRETORIOS_ABERTOS || diretorios[handle].register.TypeVal != TYPEVAL_DIRETORIO)
       return FALSE;
   else
       return TRUE;
