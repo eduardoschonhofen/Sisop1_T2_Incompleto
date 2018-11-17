@@ -7,12 +7,28 @@
 #define MAX_ARQUIVOS_ABERTOS 10
 #define MAX_DIRETORIOS_ABERTOS 10
 
+struct t2fs_info{
+  DWORD SectorPerCluster;
+  DWORD FATSectorStart;
+  DWORD RootDirCluster;
+  DWORD DataSectorStart;
+  DWORD numClusters; // NofSectors - DataSectorStart
+  DWORD FATEntriesPerSector; // SECTOR_SIZE / sizeof(DWORD)
+  DWORD clusterSize; // SectorPerCluster * SECTOR_SIZE
+  DWORD fileEntriesPerCluster; // ClusterSize /sizeof(struct registro)
+}
+
+
 typedef struct t2fs_superbloco superbloco;
 typedef struct t2fs_record Registro;
+struct t2fs_info bloco= {};
 
 typedef struct t2fs_openfile{
   struct Registro register;
 } arquivosAbertos;
+
+
+
 
 //Variavveis globais //
 arquivosAbertos  arquivos[MAX_ARQUIVOS_ABERTOS];
@@ -30,10 +46,12 @@ int iniciarT2FS(){
   {
     printf("Erro");
   }
+
+  inicializaBloco();
   iniciarArquivosAbertos();
   iniciarDiretoriosAbertos();
+  clusterAtual = superbloco.RootDirCluster;
 
-  clusterAtual = RootDirCluster;
   strcpy(currentPath, "/\0");
   inicializouT2FS = TRUE;
 
@@ -60,8 +78,22 @@ int leituraSuperBloco()
   superbloco.DataSectorStart= *((DWORD*)(buffer + 28));
 
 
+return 0;
+
 }
 
+void inicializaBloco()
+{
+  bloco.SectorPerCluster = superbloco.SectorPerCluster;
+  bloco.FATSectorStart = superbloco.pFATSectorStart;
+  bloco.RootDirCluster = superbloco.RootDirCluster;
+  bloco.DataSectorStart = superbloco.DataSectorStart;
+  bloco.numClusters = superbloco.NofSectors - bloco.DataSectorStart;
+  bloco.FATEntriesPerSector = SECTOR_SIZE / sizeof(DWORD);
+  bloco.clusterSize = bloco.SectorPerCluster * SECTOR_SIZE;
+  bloco.fileEntriesPerCluster = (info.clusterSize / sizeof(struct Registro));
+
+}
 
 void iniciarArquivosAbertos()
 {
@@ -91,7 +123,7 @@ void buscaCaminhoDoArquivo(char *pathname, char *filename)
 
     for(i = 0;i < tamanhoDoCaminho; i++)
     {
-
+        currentPath[i];
     }
 
   }
@@ -108,7 +140,7 @@ FILE2 buscaHandleArquivoLivre()
   return -1;
 }
 
-DIR2 buscaDirArquivoLivre()
+DIR2 buscaHandleDirLivre()
 {
   DIR2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_DIRETORIOS_ABERTOS;freeHandle++)
@@ -117,4 +149,21 @@ DIR2 buscaDirArquivoLivre()
       return freeHandle;
   }
   return -1;
+}
+
+
+BOOL handleFileValido(FILE2 handle)
+{
+  if(handle < 0 || handle >= MAX_ARQUIVOS_ABERTOS || arquivos[handle].register.TypeVal != TYPEVAL_REGULAR)
+      return FALSE;
+  else
+      return TRUE;
+}
+
+BOOL handleDIRValido(DIR2 handle)
+{
+  if(handle < 0 || handle >= MAX_DIRETORIOS_ABERTOS || arquivos[handle].register.TypeVal != TYPEVAL_DIRETORIO)
+      return FALSE;
+  else
+      return TRUE;
 }
