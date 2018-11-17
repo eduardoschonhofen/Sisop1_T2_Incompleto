@@ -9,6 +9,11 @@
 #define FALSE 0
 #define TRUE 1
 
+
+#define EOF 4294967295
+#define FREE 0
+#define INVALID 1
+#define BADSECTOR 4294967294
 struct t2fs_info{
   DWORD SectorsPerCluster;
   DWORD FATSectorStart;
