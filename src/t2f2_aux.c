@@ -244,3 +244,18 @@ int escreveFAT(DWORD cluster, DWORD *buffer)
   free(setor);
 	return 0;
 }
+
+
+void leDiretorio(DWORD cluster,Registro* registro)
+{
+  puts("Start");
+BYTE *buffer = (unsigned char*)malloc(sizeof(superbloco.SectorsPerCluster*SECTOR_SIZE));
+printf("Buffer:%d",buffer);
+leCluster(cluster,buffer);
+registro->TypeVal=buffer[0];
+strcpy(registro->name,buffer[1]);
+registro->bytesFileSize=*((DWORD*)(buffer + 52));
+registro->clustersFileSize=*((DWORD*)(buffer + 56));
+registro->firstCluster=*((DWORD*)(buffer + 60));
+free(buffer);
+}

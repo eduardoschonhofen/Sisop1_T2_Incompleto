@@ -12,7 +12,7 @@ t2f2:
 	$(CC) -g -m32 -Wall -c $(SRC_DIR)/t2f2_aux.c -o $(BIN_DIR)/t2f2_aux.o -Wall
 
 t2fs:
-	$(CC) -g -m32 -Wall -c $(SRC_DIR)/t2fs.c -o $(BIN_DIR)/t2fs.o -Wall
+	$(CC) -g -m32  -Wall -c $(SRC_DIR)/t2fs.c -o $(BIN_DIR)/t2fs.o -Wall
 	
 main:
 	$(CC) -g -m32 -o $(M_DIR)/main $(TST_DIR)/main.c $(BIN_DIR)/apidisk.a -Wall

@@ -30,10 +30,14 @@ FILE2 create2(char *filename)
 
   escreveCluster(5, teste);
 
-  leCluster(5, aux);
+  leCluster(2, aux);
   puts("Palavra:");
   puts(aux);
   Registro registro;
+
+  puts("Antes da leDiretorio");
+  leDiretorio(2,&registro);
+  puts("Morreu");
 
   return;
 
