@@ -30,7 +30,7 @@ FILE2 create2(char *filename)
 
   escreveCluster(5, teste);
 
-  leCluster(2, aux);
+  leCluster(5, aux);
   puts("Palavra:");
   puts(aux);
   Registro registro;

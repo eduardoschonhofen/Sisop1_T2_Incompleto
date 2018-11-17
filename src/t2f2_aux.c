@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 #include "../include/apidisk.h"
 #include "../include/t2fs.h"
 
@@ -193,15 +194,18 @@ int handleDIRValido(DIR2 handle)
       return TRUE;
 }
 
-int leCluster(DWORD cluster, BYTE *buffer)
+int leCluster(DWORD cluster, char *buffer)
 {
 	int n;
 	DWORD setor = cluster * superbloco.SectorsPerCluster;
+
 	for(n = 0; n < superbloco.SectorsPerCluster; n++)
 	{
-		if(read_sector(superbloco.DataSectorStart+setor + n, buffer + (n * SECTOR_SIZE))) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
+
+		if(read_sector(superbloco.DataSectorStart+setor + n, buffer + (n * SECTOR_SIZE)))
 			return -1;
 	}
+
 	return 0;
 }
 
@@ -248,14 +252,21 @@ int escreveFAT(DWORD cluster, DWORD *buffer)
 
 void leDiretorio(DWORD cluster,Registro* registro)
 {
-  puts("Start");
-BYTE *buffer = (unsigned char*)malloc(sizeof(superbloco.SectorsPerCluster*SECTOR_SIZE));
-printf("Buffer:%d",buffer);
+char *buffer;
+
+if((buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE))!=0)
+{
 leCluster(cluster,buffer);
+puts("0");
+printf("%d",buffer);
 registro->TypeVal=buffer[0];
-strcpy(registro->name,buffer[1]);
+memcpy(registro->name,buffer[1],50);
+puts("1");
 registro->bytesFileSize=*((DWORD*)(buffer + 52));
 registro->clustersFileSize=*((DWORD*)(buffer + 56));
+puts("2");
 registro->firstCluster=*((DWORD*)(buffer + 60));
 free(buffer);
+puts("SAIU");
+}
 }
