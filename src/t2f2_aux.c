@@ -32,10 +32,7 @@ typedef struct t2fs_openfile{
 
 //Variavveis globais //
 arquivosAbertos  arquivos[MAX_ARQUIVOS_ABERTOS];
-<<<<<<< HEAD
-=======
 arquivosAbertos  diretorios[MAX_DIRETORIOS_ABERTOS];
->>>>>>> 911884f096dba1ace6a618a1f04d6c0d3cd8f55a
 BOOL inicializouT2FS = FALSE;
 DWORD clusterAtual;
 char currentPath[MAX_FILE_NAME_SIZE+1];
