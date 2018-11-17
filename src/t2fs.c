@@ -24,21 +24,20 @@ return 0;
 }
 FILE2 create2(char *filename)
 {
-  Registro registro;
+
+  Registro registro[50000];
   iniciarT2FS();
+
   char teste[256] = "Olá Felipe tudo bem com voce?";
-  char aux[256];
+
+  char aux[1024];
 
   escreveCluster(5, teste);
 
   leCluster(5, aux);
-  puts("Palavra:");
-  puts(aux);
 
-
-  puts("Antes da leDiretorio");
   leDiretorio(2,&registro);
-  puts("Morreu");
+  puts(aux);
 
   return;
 

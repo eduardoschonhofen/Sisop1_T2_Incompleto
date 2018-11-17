@@ -253,17 +253,31 @@ void leDiretorio(DWORD cluster,Registro* registro)
 {
 char *buffer;
 int i;
+int j;
 buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
 if(buffer!=0)
 {
 leCluster(cluster,buffer);
-registro->TypeVal=buffer[0];
+
+for(j=0;j<(SECTOR_SIZE*superbloco.SectorsPerCluster)/64;j++)
+{
+registro[j].TypeVal=buffer[0*j];
 for(i=0;i<50;i++)
-registro->name[i]=buffer[1+i];
-registro->bytesFileSize=*((DWORD*)(buffer + 52));
-registro->clustersFileSize=*((DWORD*)(buffer + 56));
-registro->firstCluster=*((DWORD*)(buffer + 60));
+registro[j].name[i]=buffer[(1+i)*j];
+registro[j].bytesFileSize=*((DWORD*)(buffer + (52*j)));
+registro[j].clustersFileSize=*((DWORD*)(buffer + (56*j)));
+registro[j].firstCluster=*((DWORD*)(buffer + (60*j)));
+
+printf("TypeVal:%d\n",registro[j].TypeVal);
+printf("Name:%s\n",registro[j].name);
+printf("bytesFileSize:%d\n",registro[j].bytesFileSize);
+printf("clustersFileSize:%d\n",registro[j].clustersFileSize);
+printf("firstCluster:%d\n",registro[j].firstCluster);
+
+}
 free(buffer);
+
+
 
 }
 }
