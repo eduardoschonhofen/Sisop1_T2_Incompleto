@@ -21,7 +21,7 @@ struct t2fs_info{
 };
 
 
-typedef struct t2fs_superbloco superbloco;
+typedef struct t2fs_superbloco superBloco;
 typedef struct t2fs_record Registro;
 struct t2fs_info bloco= {};
 
@@ -38,7 +38,7 @@ arquivosAbertos  diretorios[MAX_DIRETORIOS_ABERTOS];
 bool inicializouT2FS = FALSE;
 DWORD clusterAtual;
 char currentPath[MAX_FILE_NAME_SIZE+1];
-
+superBloco superbloco;
 
 int iniciarT2FS(){
 
@@ -137,7 +137,7 @@ FILE2 buscaHandleArquivoLivre()
   FILE2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_ARQUIVOS_ABERTOS;freeHandle++)
   {
-    if(arquivos[freeHandle].regsiter.TypeVal = TYPEVAL_INVALIDO)
+    if(arquivos[freeHandle].register.TypeVal = TYPEVAL_INVALIDO)
       return freeHandle;
   }
   return -1;
@@ -148,7 +148,7 @@ DIR2 buscaHandleDirLivre()
   DIR2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_DIRETORIOS_ABERTOS;freeHandle++)
   {
-    if(diretorios[freeHandle].regsiter.TypeVal = TYPEVAL_INVALIDO)
+    if(diretorios[freeHandle].register.TypeVal = TYPEVAL_INVALIDO)
       return freeHandle;
   }
   return -1;
