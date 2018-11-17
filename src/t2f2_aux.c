@@ -168,3 +168,27 @@ BOOL handleDIRValido(DIR2 handle)
   else
       return TRUE;
 }
+
+int leCluster(DWORD cluster, unsigned char *buffer)
+{
+	int n;
+	DWORD setor = cluster * superbloco.SectorsPerCluster;
+	for(n = 0; n < superbloco.SectorsPerCluster; n++)
+	{
+		if(read_sector(setor + n, buffer + (n * 256))) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
+			return -1;
+	}
+	return 0;
+}
+
+int escreveCluster(DWORD cluster, unsigned char *buffer)
+{
+	int n;
+	DWORD setor = cluster * superbloco.SectorsPerCluster;
+	for(n = 0; n < superbloco.SectorsPerCluster; n++)
+	{
+		if(write_sector(setor + n, buffer + (n * 256))) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
+			return -1;
+	}
+	return 0;
+}

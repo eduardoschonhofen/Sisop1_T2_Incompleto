@@ -35,7 +35,25 @@ int read2(FILE2 handle, char *buffer, int size);
 int write2(FILE2 handle, char *buffer, int size);
 int truncate2(FILE2 handle);
 int seek2 (FILE2 handle, unsigned int offset);
-int mkdir2(char *pathname);
+int mkdir2 (char *caminho)
+{
+	char nomedir[MAX_CHAR_NOME];
+	t2fs_record novodir;
+	buscaCaminhoDoArquivo(caminho, nomedir); // Separar o resto do caminho do nome do diretorio a ser criado
+	if(não exite getDiretorio(nomedir, restoDoCaminho)) // Testa se já existe um diretorio nesse caminho com esse nome
+	{
+		if(achaClusterVazio(&novodir.firstCluster)) // retorna 0 caso não encontre um cluster pra usar, e 1 caso encontre
+		{
+			novodir.TypeVal = TYPEVAL_DIRETORIO;
+			strcpy(novodir.name, nomedir);
+			novodir.bytesFileSize = TAMANHO_BLOCO;		// colocação das infos do t2fs_record do diretorio
+			novodir.clustersFileSize = 1;
+			escreveFAT(novodir.firstCluster, 0xFFFFFFFF);	// Marcando na FAT como unico cluster desse arquivo (pois os diretorios sao limitados a um cluster, eu acho)
+			return 0;
+		}
+	}
+	return -1;
+}
 int rmdir2(char * pathname);
 int chdir2(char *pathname);
 int getcwd2(char *pathname, int size);
