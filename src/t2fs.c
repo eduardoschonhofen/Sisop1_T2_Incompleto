@@ -29,7 +29,7 @@ FILE2 create2(char *filename)
 
 
   Registro registro;
-  printf("Cechin\n");
+
 
 
 }

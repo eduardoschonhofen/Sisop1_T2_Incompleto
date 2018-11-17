@@ -6,7 +6,7 @@ SRC_DIR=./src
 TST_DIR=./teste
 M_DIR=./
 
-all: t2f2 t2fs api main
+all:  t2f2 t2fs api main
 
 t2f2:
 	$(CC) -g -m32 -Wall -c $(SRC_DIR)/t2f2_aux.c -o $(BIN_DIR)/t2f2_aux.o -Wall
