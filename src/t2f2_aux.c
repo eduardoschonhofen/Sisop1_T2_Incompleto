@@ -80,7 +80,15 @@ int leituraSuperBloco()
   superbloco.RootDirCluster = *((DWORD*)(buffer + 24));
   superbloco.DataSectorStart= *((DWORD*)(buffer + 28));
 
-
+printf("Id: %s\n", superbloco.id);
+printf("Version: %d\n", superbloco.version);
+printf("SuperBlock Size (Blocks): %d\n", superbloco.superblockSize);
+printf("DiskSize : %d\n", superbloco.DiskSize);
+printf("NofSectors: %d\n", superbloco.NofSectors);
+printf("SectorsPerCluster: %d\n", superbloco.SectorsPerCluster);
+printf("pFATSectorStart: %d\n", superbloco.pFATSectorStart);
+printf("RootDirCluster: %d\n", superbloco.RootDirCluster);
+printf("DataSectorStart: %d\n", superbloco.DataSectorStart);
 return 0;
 
 }
