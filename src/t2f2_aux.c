@@ -16,7 +16,7 @@ struct t2fs_info{
   DWORD FATEntriesPerSector; // SECTOR_SIZE / sizeof(DWORD)
   DWORD clusterSize; // SectorPerCluster * SECTOR_SIZE
   DWORD fileEntriesPerCluster; // ClusterSize /sizeof(struct registro)
-}
+};
 
 
 typedef struct t2fs_superbloco superbloco;
@@ -24,7 +24,7 @@ typedef struct t2fs_record Registro;
 struct t2fs_info bloco= {};
 
 typedef struct t2fs_openfile{
-  struct Registro register;
+  Registro register;
 } arquivosAbertos;
 
 
@@ -33,7 +33,7 @@ typedef struct t2fs_openfile{
 //Variavveis globais //
 arquivosAbertos  arquivos[MAX_ARQUIVOS_ABERTOS];
 arquivosAbertos  diretorios[MAX_DIRETORIOS_ABERTOS];
-BOOL inicializouT2FS = FALSE;
+bool inicializouT2FS = FALSE;
 DWORD clusterAtual;
 char currentPath[MAX_FILE_NAME_SIZE+1];
 
