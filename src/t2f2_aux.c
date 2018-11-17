@@ -194,7 +194,7 @@ int leCluster(DWORD cluster, BYTE *buffer)
 	DWORD setor = cluster * superbloco.SectorsPerCluster;
 	for(n = 0; n < superbloco.SectorsPerCluster; n++)
 	{
-		if(read_sector(Superbloco.DataSectorStart+setor + n, buffer + (n * SECTOR_SIZE))) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
+		if(read_sector(superbloco.DataSectorStart+setor + n, buffer + (n * SECTOR_SIZE))) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
 			return -1;
 	}
 	return 0;
@@ -206,7 +206,7 @@ int escreveCluster(DWORD cluster, BYTE *buffer)
 	DWORD setor = cluster * superbloco.SectorsPerCluster;
 	for(n = 0; n < superbloco.SectorsPerCluster; n++)
 	{
-		if(write_sector(Superbloco.DataSectorStart+setor + n, buffer + (n * SECTOR_SIZE))) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
+		if(write_sector(superbloco.DataSectorStart+setor + n, buffer + (n * SECTOR_SIZE))) // Acredito que sejam esses os parâmentros, mas tenho dúvidas
 			return -1;
 	}
 	return 0;
