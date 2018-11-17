@@ -34,6 +34,7 @@ struct t2fs_info bloco= {};
 struct t2fs_openfile{
   struct t2fs_record Register;
   int currentPointer;
+  int status; //OPEN OR CLOSED
 };
 typedef struct t2fs_openfile arquivosAbertos;
 

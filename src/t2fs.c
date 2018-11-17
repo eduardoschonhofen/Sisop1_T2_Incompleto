@@ -47,8 +47,30 @@ FILE2 create2(char *filename)
 
 int delete2(char *filename);
 FILE2 open2(char *filename);
-int close2 (FILE2 handle);
-int read2(FILE2 handle, char *buffer, int size);
+int close2 (FILE2 handle)
+{
+  if(handle<0||handle>10)
+    return;
+  else
+  {
+
+    arquivos[handle].status=0;
+  }
+
+}
+int read2(FILE2 handle, char *buffer, int size)
+{
+  char *aux;
+  aux=(char*)malloc(size);
+  if(handle<0||handle>10 || arquivos[handle].status==0)
+    return 0;
+  else
+  {
+
+    return;
+  }
+
+}
 int write2(FILE2 handle, char *buffer, int size);
 int truncate2(FILE2 handle);
 int seek2 (FILE2 handle, unsigned int offset);
