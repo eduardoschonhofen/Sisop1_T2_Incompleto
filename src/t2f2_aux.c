@@ -105,12 +105,12 @@ void inicializaBloco()
   bloco.fileEntriesPerCluster = (bloco.clusterSize / sizeof( Registro ));
 
   printf("\n SectorsPerCluster: %d\n", bloco.SectorsPerCluster);
-  printf("pFATSectorStart: %d\n", bloco.pFATSectorStart);
+  printf("pFATSectorStart: %d\n", bloco.FATSectorStart);
   printf("RootDirCluster: %d\n", bloco.RootDirCluster);
   printf("DataSectorStart: %d\n", bloco.DataSectorStart);
   printf("numClusters: %d\n", bloco.numClusters);
   printf("FATEntriesPerSector: %d\n", bloco.FATEntriesPerSector);
-  printf("clusterSize: %d\n", bloco.clusterSize;
+  printf("clusterSize: %d\n", bloco.clusterSize);
   printf("fileEntriesPerCluster: %d\n", bloco.fileEntriesPerCluster);
 
 }
