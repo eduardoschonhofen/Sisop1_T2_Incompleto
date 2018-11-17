@@ -32,7 +32,7 @@ typedef struct t2fs_openfile{
 
 //Variavveis globais //
 arquivosAbertos  arquivos[MAX_ARQUIVOS_ABERTOS];
-BOOL inicializouT2FS = FALSE
+BOOL inicializouT2FS = FALSE;
 DWORD clusterAtual;
 char currentPath[MAX_FILE_NAME_SIZE+1];
 
@@ -88,7 +88,7 @@ void inicializaBloco()
   bloco.FATSectorStart = superbloco.pFATSectorStart;
   bloco.RootDirCluster = superbloco.RootDirCluster;
   bloco.DataSectorStart = superbloco.DataSectorStart;
-  bloco.numClusters = superbloco.NofSectors - bloco.DataSectorStart;
+  bloco.numClusters = (superbloco.NofSectors - bloco.DataSectorStart)/superbloco.SectorPerCluster;
   bloco.FATEntriesPerSector = SECTOR_SIZE / sizeof(DWORD);
   bloco.clusterSize = bloco.SectorPerCluster * SECTOR_SIZE;
   bloco.fileEntriesPerCluster = (info.clusterSize / sizeof(struct Registro));
