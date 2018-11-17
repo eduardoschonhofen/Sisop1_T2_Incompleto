@@ -205,7 +205,6 @@ int leCluster(DWORD cluster, char *buffer)
 		if(read_sector(superbloco.DataSectorStart+setor + n, buffer + (n * SECTOR_SIZE)))
 			return -1;
 	}
-
 	return 0;
 }
 
@@ -253,20 +252,18 @@ int escreveFAT(DWORD cluster, DWORD *buffer)
 void leDiretorio(DWORD cluster,Registro* registro)
 {
 char *buffer;
-
-if((buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE))!=0)
+int i;
+buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
+if(buffer!=0)
 {
 leCluster(cluster,buffer);
-puts("0");
-printf("%d",buffer);
 registro->TypeVal=buffer[0];
-memcpy(registro->name,buffer[1],50);
-puts("1");
+for(i=0;i<50;i++)
+registro->name[i]=buffer[1+i];
 registro->bytesFileSize=*((DWORD*)(buffer + 52));
 registro->clustersFileSize=*((DWORD*)(buffer + 56));
-puts("2");
 registro->firstCluster=*((DWORD*)(buffer + 60));
 free(buffer);
-puts("SAIU");
+
 }
 }
