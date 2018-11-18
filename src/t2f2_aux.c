@@ -283,3 +283,72 @@ free(buffer);
 
 }
 }
+
+// Retorna a entrada livre da FAT ou -1 caso não encontre
+DWORD buscaFATLivre()
+{
+	unsigned int n;
+	DWORD buffer;
+	int numPosicoesFAT = (superbloco.DataSectorStart - superbloco.pFATSectorStart) * superbloco.SectorsPerCluster * SECTOR_SIZE / 4; // calcula o num de bytes da fat, divide por quatro pro num de entradas da fat
+	for(n = 2; n < numPosicoesFAT; n++)
+	{
+		if(leFAT(n, &buffer))
+			return -1;
+		if(buffer == 0)
+			return n;
+	}
+	return -2;
+}
+
+int leEntradaDiretorio(DIR2 handle, Registro* registro)
+{
+	char *buffer;
+	int i;
+	
+	buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
+	DWORD cluster = diretorios[handle].Register.firstCluster;
+	int ponteiro = diretorios[handle].currentPointer;
+	if(buffer!=0)
+	{
+		leCluster(cluster,buffer);
+		registro.TypeVal=buffer[64*ponteiro];
+		if (registro.TypeVal != 0)
+		{
+			for(i=0;i<50;i++)
+				registro.name[i]=buffer[(1+i)+(ponteiro*64)];
+			registro.bytesFileSize=*((DWORD*)(buffer + (52+(ponteiro*64))));
+			registro.clustersFileSize=*((DWORD*)(buffer + (56+(ponteiro*64))));
+			registro.firstCluster=*((DWORD*)(buffer + (60+(ponteiro*64))));
+			diretorios[handle].currentPointer = diretorios[handle].currentPointer + 1; // atualiza current pointer
+			free(buffer);
+			return 0;
+		}
+	}
+	return -1;
+	
+}
+
+// retorna 0 se não existe diretorio com o nome especificado, se existe retorna 1
+int existeDiretorioComNome(char* nome)
+{
+	char *buffer;
+	int i;
+	int j;
+	buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
+	if(buffer!=0)
+	{
+		leCluster(clusterAtual,buffer);
+
+		for(j=0;j<(SECTOR_SIZE*superbloco.SectorsPerCluster)/64;j++)
+		{
+			if(buffer[64*j] == TYPEVAL_DIRETORIO && !strcmp(buffer + 1 + j*64, nome))
+			{
+				free(buffer);
+				return 1;
+			}
+		}
+		free(buffer);
+		return 0;
+	}
+	return -1;
+}
