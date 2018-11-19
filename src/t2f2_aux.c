@@ -420,10 +420,8 @@ int leEntradaDiretorioPorNome(DWORD cluster, char* nome, Registro* registro)
 int diretorioPai(char *pathname, char *pathDiretorioPai)
 {
     char *aux, *diretorioPai;
-    Registro *bufferRegistro;
     int i, tamanhoPath, ultimaBarra;
     tamanhoPath = strlen(pathname);
-    bufferRegistro = (Registro*)malloc(sizeof(Registro));
     aux = (char*)malloc(sizeof(tamanhoPath));
     diretorioPai = (char*)malloc(sizeof(tamanhoPath));
     strcpy(aux, pathname);
@@ -484,6 +482,37 @@ DWORD clusterFromPath(char *path)
 return clusterAux;
 }
 
+int nomeDiretorioDoPath(char *pathname, char *nomeDir)
+{
+  char *aux, *nomeDiretorio;
+  int i, tamanhoPath, ultimaBarra;
+  tamanhoPath = strlen(pathname);
+  strcpy(aux,pathname);
+  nomeDiretorio = (char*)malloc(sizeof(tamanhoPath));
+
+  if(aux[0] == '/') //absoluto
+  {
+    for(i = 1;i < tamanhoPath + 1; i++)
+    {
+      if(aux[i] == '/')
+      {
+        ultimaBarra = i;
+      }
+    }
+    i = 0;
+    ultimaBarra++;
+    while(aux[ultimaBarra] != "\0")
+    {
+      nomeDiretorio[i] = aux[ultimaBarra];
+      i++;
+      ultimaBarra++;
+    }
+    nomeDiretorio[i] = "\0";
+  return 0;
+
+  }
+  return -1;
+}
 int trataPathName(char *path)
 {
   char *aux;
