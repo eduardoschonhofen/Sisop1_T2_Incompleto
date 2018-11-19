@@ -444,7 +444,9 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
       diretorioPai[i] = "\0";
 
       strcpy(pathDiretorioPai, diretorioPai);
+      return 0;
     }
+      return -1;
 }
 
 DWORD clusterFromPath(char *path)
@@ -498,5 +500,11 @@ int trataPathName(char *path)
   {
   strcpy(aux2,currentPath);
   strcat(aux2,path+1);
+  strcpy(path,aux2);
+  return 0;
+  }
+  else
+  {
+    return -1;
   }
 }
