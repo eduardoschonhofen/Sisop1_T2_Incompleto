@@ -508,6 +508,7 @@ int nomeDiretorioDoPath(char *pathname, char *nomeDir)
       ultimaBarra++;
     }
     nomeDiretorio[i] = "\0";
+    strcpy(nomeDir, nomeDiretorio);
   return 0;
 
   }
