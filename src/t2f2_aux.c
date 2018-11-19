@@ -14,6 +14,8 @@
 #define EOF 4294967295
 #define FREE 0
 #define INVALID 1
+#define OPEN 0
+#define CLOSED 1
 #define BADSECTOR 4294967294
 struct t2fs_info{
   DWORD SectorsPerCluster;
@@ -311,14 +313,14 @@ int leEntradaDiretorio(DIR2 handle, Registro* registro)
 	if(buffer!=0)
 	{
 		leCluster(cluster,buffer);
-		registro.TypeVal=buffer[64*ponteiro];
-		if (registro.TypeVal != 0)
+		registro->TypeVal=buffer[64*ponteiro];
+		if (registro->TypeVal != 0)
 		{
 			for(i=0;i<50;i++)
-				registro.name[i]=buffer[(1+i)+(ponteiro*64)];
-			registro.bytesFileSize=*((DWORD*)(buffer + (52+(ponteiro*64))));
-			registro.clustersFileSize=*((DWORD*)(buffer + (56+(ponteiro*64))));
-			registro.firstCluster=*((DWORD*)(buffer + (60+(ponteiro*64))));
+				registro->name[i]=buffer[(1+i)+(ponteiro*64)];
+			registro->bytesFileSize=*((DWORD*)(buffer + (52+(ponteiro*64))));
+			registro->clustersFileSize=*((DWORD*)(buffer + (56+(ponteiro*64))));
+			registro->firstCluster=*((DWORD*)(buffer + (60+(ponteiro*64))));
 			diretorios[handle].currentPointer = diretorios[handle].currentPointer + 1; // atualiza current pointer
 			free(buffer);
 			return 0;
@@ -351,6 +353,40 @@ int existeDiretorioComNome(char* nome)
 		return 0;
 	}
 	return -1;
+}
+DWORD clusterFromPath(char *path)
+{
+  int i,j, tamanhoPath, sucesso = 1;
+  char *aux;
+  DWORD clusterAux = superbloco.RootDirCluster;
+  tamanhoPath = strlen(path);
+  aux = (char*) malloc(sizeof(tamanhoPath));
+  Registro *bufferRegistro;
+  bufferRegistro = (Registro*)malloc(sizeof(Registro));
+  i = 1;
+  while(sucesso)
+  {
+    while(path[i] != '/' && path[i] != "\0")
+    {
+      aux[j] = path[i];
+      i++;
+      j++;
+    }
+    j = 0;
+    if(path[i] == "\0")
+    {
+      sucesso = 0;
+    }
+    if(leEntradaDiretorioPorNome(clusterAux,aux,bufferRegistro) == -1)
+    {
+      return -1;
+    }
+    else
+    {
+      clusterAux = bufferRegistro->firstCluster;
+    }
+  }
+return clusterAux;
 }
 
 // retorna 0 se diretorio  nao esta vazio, se nao esta vazio retorna 1
@@ -385,7 +421,7 @@ int diretorioEstaVazio(char *path)
 int leEntradaDiretorioPorNome(DWORD cluster, char* nome, Registro* registro)
 {
 	char *buffer, nometeste[50];
-	int i;
+	int i,j;
 
 	buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
 
@@ -401,11 +437,11 @@ int leEntradaDiretorioPorNome(DWORD cluster, char* nome, Registro* registro)
 						nometeste[i]=buffer[(1+i)+(j*64)];
 					if (!strcmp(nome, nometeste))
 					{
-						registro.TypeVal=buffer[64*j];
-						strcpy(registro.name, nometeste);
-						registro.bytesFileSize=*((DWORD*)(buffer + (52+(j*64))));
-						registro.clustersFileSize=*((DWORD*)(buffer + (56+(j*64))));
-						registro.firstCluster=*((DWORD*)(buffer + (60+(j*64))));
+						registro->TypeVal=buffer[64*j];
+						strcpy(registro->name, nometeste);
+						registro->bytesFileSize=*((DWORD*)(buffer + (52+(j*64))));
+						registro->clustersFileSize=*((DWORD*)(buffer + (56+(j*64))));
+						registro->firstCluster=*((DWORD*)(buffer + (60+(j*64))));
 						return 0;
 					}
 				}
@@ -435,7 +471,7 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
           ultimaBarra = i;
         }
       }
-      for(i = 0, i < ultimaBarra, i++)
+      for(i = 0; i < ultimaBarra; i++)
       {
         diretorioPai[i] = aux[i];
       }
@@ -447,40 +483,7 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
       return -1;
 }
 
-DWORD clusterFromPath(char *path)
-{
-  int i, tamanhoPath, sucesso = 1;
-  char *aux;
-  DWORD clusterAux = superbloco.RootDirCluster;
-  tamanhoPath = strlen(path);
-  aux = (char*) malloc(sizeof(tamanhoPath));
-  Registro *bufferRegistro;
-  bufferRegistro = (Registro*)malloc(sizeof(Registro));
-  i = 1;
-  while(sucesso)
-  {
-    while(path[i] != '/' && path[i] != "\0")
-    {
-      aux[j] = path[i];
-      i++;
-      j++;
-    }
-    j = 0;
-    if(path[i] == "\0")
-    {
-      sucesso = 0;
-    }
-    if(leEntradaDiretorioPorNome(clusterAux,aux,bufferRegistro) == -1)
-    {
-      return -1;
-    }
-    else
-    {
-      clusterAux = bufferRegistro.firstCluster;
-    }
-  }
-return clusterAux;
-}
+
 
 int nomeDiretorioDoPath(char *pathname, char *nomeDir)
 {
@@ -508,6 +511,7 @@ int nomeDiretorioDoPath(char *pathname, char *nomeDir)
       ultimaBarra++;
     }
     nomeDiretorio[i] = "\0";
+    strcpy(nomeDir, nomeDiretorio);
   return 0;
 
   }
@@ -516,6 +520,7 @@ int nomeDiretorioDoPath(char *pathname, char *nomeDir)
 int trataPathName(char *path)
 {
   char *aux;
+  char *aux2;
   aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
   aux2=(char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
   strcpy(aux,path);

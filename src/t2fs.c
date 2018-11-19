@@ -27,17 +27,17 @@ FILE2 create2(char *filename)
 
   Registro registro[50000];
   iniciarT2FS();
+  DWORD cluster = clusterFromPath(filename)
+  if((int)cluster<0)
+  {
+  novoArquivo(filename);
 
-  char teste[256] = "Olá Felipe tudo bem com voce?";
+  }
+  else
+  {
+  zeraArquivo(cluster);
 
-  char aux[1024];
-
-  escreveCluster(5, teste);
-
-  leCluster(5, aux);
-
-  leDiretorio(2,&registro);
-  puts(aux);
+  }
 
   return;
 
@@ -204,14 +204,14 @@ DIR2 opendir2(char *pathname)
 		handle = buscaHandleDirLivre();
 		if (handle >= 0)
 		{
-			leEntradaDiretorioPorNome(cluster, nomeDir, &buffer);
-			diretorios[handle].registro.TypeVal=buffer.TypeVal;
-			strcpy(diretorios[handle].registro.name, nometeste);
-			diretorios[handle].registro.bytesFileSize=buffer.bytesFileSize;
-			diretorios[handle].registro.clustersFileSize=buffer.clustersFileSize;
-			diretorios[handle].registro.firstCluster=buffer.firstCluster;
+			leEntradaDiretorioPorNome(cluster, nomedir, &buffer);
+			diretorios[handle].Register.TypeVal=buffer.TypeVal;
+			strcpy(diretorios[handle].Register.name, nomedir);
+			diretorios[handle].Register.bytesFileSize=buffer.bytesFileSize;
+			diretorios[handle].Register.clustersFileSize=buffer.clustersFileSize;
+			diretorios[handle].Register.firstCluster=buffer.firstCluster;
 			diretorios[handle].status = OPEN;
-			diretorios[handle].currentPointers = 0;
+			diretorios[handle].currentPointer = 0;
 			return 0;
 		}
 	}
@@ -222,11 +222,11 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry)
 {
 	DWORD cluster = diretorios[handle].Register.firstCluster;
 	Registro registro;
-	if(!leEntradaDiretorio(handle, &registro);
+	if(!leEntradaDiretorio(handle, &registro))
 	{
-		strcpy(dentry.name, registro.name);
-		dentry.fileType = registro.TypeVal;
-		dentry.fileSize = registro.clustersFileSize * superBloco.SectorsPerCluster * SECTOR_SIZE;
+		strcpy(dentry->name, registro.name);
+		dentry->fileType = registro.TypeVal;
+		dentry->fileSize=registro.clustersFileSize*superbloco.SectorsPerCluster*SECTOR_SIZE;
 		return 0;
 	}
 	return -1;
