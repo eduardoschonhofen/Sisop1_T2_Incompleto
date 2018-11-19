@@ -489,5 +489,23 @@ DWORD clusterFromPath(char *path)
       clusterAux = bufferRegistro.firstCluster;
     }
   }
+return clusterAux;
+}
 
+int trataPathName(char *path)
+{
+  char *aux;
+  tamanhoPath = strlen(path);
+  aux = (char*) malloc(sizeof(tamanhoPath));
+
+  if(aux[0] == '/')
+  {
+    return 0;
+  }
+
+  else if(aux[0] == '.')
+  {
+
+
+  }
 }
