@@ -354,6 +354,27 @@ int existeDiretorioComNome(char* nome)
 	}
 	return -1;
 }
+
+void novoArquivo(char *filename)
+{
+  DWORD cluster = buscaFATLivre();
+  char nome[51];
+  escreveFAT(cluster,EOF);
+
+  Registro registro;
+
+  registro.TypeVal = 1;
+  nomeDiretorioDoPath(filename,nome)
+  strcpy(registro.name,nome);
+  registro.bytesFileSize=0;
+  registro.clustersFileSize=1;
+  registro.firstCluster=cluster;
+
+//PREENCHER AQUI O REGISTRO
+
+
+
+}
 DWORD clusterFromPath(char *path)
 {
   int i,j, tamanhoPath, sucesso = 1;
