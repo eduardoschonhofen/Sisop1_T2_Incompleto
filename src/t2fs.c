@@ -152,10 +152,15 @@ int chdir2(char *pathname)
 	// Abre ele
 	// coloca em clusterAtual o cluster desse diretorio
 	// retorna 0
-	DWORD cluster = clusterFromPath(pathname);
+	char *aux;
+	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
+	strcpy(aux, pathname);
+	trataPathName(aux);
+	DWORD cluster = clusterFromPath(aux);
 	if(cluster < 0)
 		return -1;
 	clusterAtual = cluster;
+	strcpy(currentPath, aux);
 	return 0;
 }
 int getcwd2(char *pathname, int size)
