@@ -416,3 +416,78 @@ int leEntradaDiretorioPorNome(DWORD cluster, char* nome, Registro* registro)
 	return -1;
 
 }
+
+int diretorioPai(char *pathname, char *pathDiretorioPai)
+{
+    char *aux, *diretorioPai;
+    Registro *bufferRegistro;
+    int i, tamanhoPath, ultimaBarra;
+    tamanhoPath = strlen(pathname);
+    bufferRegistro = (Registro*)malloc(sizeof(Registro));
+    aux = (char*)malloc(sizeof(tamanhoPath));
+    diretorioPai = (char*)malloc(sizeof(tamanhoPath));
+    strcpy(aux, pathname);
+
+    if(aux[0] == '/') //absoluto
+    {
+      for(i = 1;i < tamanhoPath + 1; i++)
+      {
+        if(aux[i] == '/')
+        {
+          ultimaBarra = i;
+        }
+      }
+      for(i = 0, i < ultimaBarra, i++)
+      {
+        diretorioPai[i] = aux[i];
+      }
+      diretorioPai[i] = "\0"
+
+      strcpy(pathDiretorioPai, diretorioPai);
+    }
+
+    else if(aux[0] == '.')
+    {
+      char pontoPonto[3] = "..";
+
+      leEntradaDiretorioPorNome(clusterAtual,pontoPonto,bufferRegistro);
+
+
+    }
+
+}
+
+DWORD clusterFromPath(char *path)
+{
+  int i, tamanhoPath, sucesso = 1;
+  char *aux;
+  DWORD clusterAux = superbloco.RootDirCluster;
+  tamanhoPath = strlen(path);
+  aux = (char*) malloc(sizeof(tamanhoPath));
+  Registro *bufferRegistro;
+  bufferRegistro = (Registro*)malloc(sizeof(Registro));
+  i = 1;
+  while(sucesso)
+  {
+    while(path[i] != '/' && path[i] != "\0")
+    {
+      aux[j] = path[i];
+      i++;
+      j++;
+    }
+    j = 0;
+    if(path[i] == "\0")
+    {
+      sucesso = 0;
+    }
+    if(leEntradaDiretorioPorNome(clusterAux,aux,bufferRegistro) == -1)
+    {
+      return -1;
+    }
+    else
+    {
+      clusterAux = bufferRegistro.firstCluster;
+    }
+  }
+
+}
