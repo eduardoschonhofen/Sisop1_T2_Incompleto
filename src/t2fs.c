@@ -74,12 +74,16 @@ int read2(FILE2 handle, char *buffer, int size)
 int write2(FILE2 handle, char *buffer, int size);
 int truncate2(FILE2 handle);
 int seek2 (FILE2 handle, unsigned int offset);
-/*
+
 int mkdir2 (char *caminho)
 {
 	char nomedir[MAX_CHAR_NOME];
 	Registro novodir;
-	buscaCaminhoDoArquivo(caminho, nomedir); // FALTA TERMINAR ESSA FUNÇÃO, PRA PODERMOS TESTAR <---------------------------------------------
+	char *aux;
+	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
+	strcpy(aux, pathname);
+	trataPathName(aux);
+	nomeDiretorioDoPath(aux, nomedir); // FALTA TERMINAR ESSA FUNÇÃO, PRA PODERMOS TESTAR <---------------------------------------------
 	if(!existeDiretorioComNome(nomedir)) // Testa se já existe um diretorio nesse caminho com esse nome
 	{
 		novodir.firstCluster = buscaFATLivre();
@@ -95,7 +99,7 @@ int mkdir2 (char *caminho)
 	}
 	return -1;
 }
-*/
+
 
 int rmdir2(char * pathname)
 {
@@ -108,12 +112,16 @@ int rmdir2(char * pathname)
 	//Libera a entrada de diretorio no diretorio pai
 
 	//Retorna zero
+	char *aux;
+	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
+	strcpy(aux, pathname);
+	trataPathName(aux);
 	char pathDiretorioPai[MAX_FILE_NAME_SIZE+1], nomedir[MAX_FILE_NAME_SIZE+1], nometeste[50];
 	DWORD clusterPai;
-	if(diretorioEstaVazio(pathname))
+	if(diretorioEstaVazio(aux))
 	{
-		diretorioPai(pathname, pathDiretorioPai); // FALTA <----------------------------
-		nomeDiretorioDoPath(pathname, nomedir);  // FALTA <----------------------------
+		diretorioPai(aux, pathDiretorioPai); // FALTA <----------------------------
+		nomeDiretorioDoPath(aux, nomedir);  // FALTA <----------------------------
 
 		clusterPai = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
 
@@ -135,11 +143,13 @@ int rmdir2(char * pathname)
 						*((DWORD*)(buffer + (60+(j*64)))) = 0; // CONFERIR <--------------------------------
 						escreveCluster(clusterPai, buffer);
 						free(buffer);
+						free(aux);
 						return 0;
 					}
 				}
 			}
 			free(buffer);
+			free(aux);
 		}
 	}
 
@@ -179,9 +189,12 @@ DIR2 opendir2(char *pathname)
 	// coloca o ponteiroAtual do diretorio pra 0
 	// retorna a posicao do vetor de diretorios abertos
 	char pathDiretorioPai[MAX_FILE_NAME_SIZE+1], nomedir[MAX_FILE_NAME_SIZE+1];
-
-	diretorioPai(pathname, pathDiretorioPai); // FALTA <----------------------------
-	nomeDiretorioDoPath(pathname, nomedir); // FALTA <----------------------------
+	char *aux;
+	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
+	strcpy(aux, pathname);
+	trataPathName(aux);
+	diretorioPai(aux, pathDiretorioPai); // FALTA <----------------------------
+	nomeDiretorioDoPath(aux, nomedir); // FALTA <----------------------------
 
 	DWORD cluster = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
 	DIR2 handle;
