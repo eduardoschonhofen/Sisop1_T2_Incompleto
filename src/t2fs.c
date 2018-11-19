@@ -27,17 +27,17 @@ FILE2 create2(char *filename)
 
   Registro registro[50000];
   iniciarT2FS();
+  DWORD cluster = clusterFromPath(filename)
+  if((int)cluster<0)
+  {
+  novoArquivo(filename);
 
-  char teste[256] = "Olá Felipe tudo bem com voce?";
+  }
+  else
+  {
+  zeraArquivo(cluster);
 
-  char aux[1024];
-
-  escreveCluster(5, teste);
-
-  leCluster(5, aux);
-
-  leDiretorio(2,&registro);
-  puts(aux);
+  }
 
   return;
 
