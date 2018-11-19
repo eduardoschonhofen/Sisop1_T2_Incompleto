@@ -12,7 +12,7 @@
 int identify2 (char *name, int size)
 {
   iniciarT2FS();
-  char *grupo = "Eduardo Osielski Schonhofen 00273732\n Felipe Fernandes Bastos 00279793\n Lucas Romagnoli 00\0";
+  char *grupo = "Eduardo Osielski Schonhofen 00273732\n Felipe Fernandes Bastos 00279793\n Lucas Romagnoli 00194235\0";
   if(size < strlen(grupo)){
   printf("Erro");
   return -1;
