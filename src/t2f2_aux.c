@@ -441,20 +441,10 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
       {
         diretorioPai[i] = aux[i];
       }
-      diretorioPai[i] = "\0"
+      diretorioPai[i] = "\0";
 
       strcpy(pathDiretorioPai, diretorioPai);
     }
-
-    else if(aux[0] == '.')
-    {
-      char pontoPonto[3] = "..";
-
-      leEntradaDiretorioPorNome(clusterAtual,pontoPonto,bufferRegistro);
-
-
-    }
-
 }
 
 DWORD clusterFromPath(char *path)
