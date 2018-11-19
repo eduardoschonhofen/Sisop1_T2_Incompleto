@@ -63,7 +63,7 @@ int iniciarT2FS(){
   iniciarDiretoriosAbertos();
   clusterAtual = superbloco.RootDirCluster;
 
-  strcpy(currentPath, "/\0");
+  strcpy(currentPath, "/");
   inicializouT2FS = TRUE;
 
 
@@ -495,8 +495,9 @@ return clusterAux;
 int trataPathName(char *path)
 {
   char *aux;
-  tamanhoPath = strlen(path);
-  aux = (char*) malloc(sizeof(tamanhoPath));
+  aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
+  aux2=(char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
+  strcpy(aux,path);
 
   if(aux[0] == '/')
   {
@@ -505,7 +506,7 @@ int trataPathName(char *path)
 
   else if(aux[0] == '.')
   {
-
-
+  strcpy(aux2,currentPath);
+  strcat(aux2,path+1);
   }
 }
