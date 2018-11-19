@@ -179,6 +179,12 @@ int getcwd2(char *pathname, int size)
 	// navega ate o diretorio atual, compilando os nomes de cada diretorio passado no caminho
 
 	// Retorna erro se o pathname fica maior que a informacao passada pela variavel size
+	if(strlen(currentPath) < size)
+	{
+		strcpy(pathname, currentPath);
+		return 0;
+	}
+	
 	return -1;
 }
 DIR2 opendir2(char *pathname)
