@@ -101,14 +101,48 @@ int rmdir2(char * pathname)
 {
 	//Navega ate o diretorio! Qualquer problema pra chegar lah, retorna erro
 	//Essa é a parte mais crucial que ainda nao temos. fazemos isso e o resto se ajeita
-	
+
 	//testa se o diretorio esta vazio(exeto . e ..)! soh pode remover se o diretorio esta vazio
-	
+
 	//Libera o cluster do diretorio na FAT
 	//Libera a entrada de diretorio no diretorio pai
-	
+
 	//Retorna zero
-	
+	char pathDiretorioPai[MAX_FILE_NAME_SIZE+1], nomedir[MAX_FILE_NAME_SIZE+1], nometeste[50];
+	DWORD clusterPai;
+	if(diretorioEstaVazio(pathname))
+	{
+		diretorioPai(pathname, pathDiretorioPai); // FALTA <----------------------------
+		nomeDiretorioDoPath(pathname, nomedir);  // FALTA <----------------------------
+
+		clusterPai = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
+
+		if(clusterPai > 0)
+		{
+			leCluster(clusterPai,buffer);
+			for(j=2;j<(SECTOR_SIZE*superbloco.SectorsPerCluster)/64;j++)
+			{
+				if(buffer[64*j] == TYPEVAL_DIRETORIO)
+				{
+					for(i=0;i<50;i++)
+						nometeste[i]=buffer[(1+i)+(j*64)];
+					if (!strcmp(nomedir, nometeste))
+					{
+						escreveFAT(*((DWORD*)(buffer + (60+(j*64)))), 0);
+						buffer[64*j] = TYPEVAL_INVALIDO;
+						*((DWORD*)(buffer + (52+(j*64)))) = 0; // CONFERIR <--------------------------------
+						*((DWORD*)(buffer + (56+(j*64)))) = 0; // CONFERIR <--------------------------------
+						*((DWORD*)(buffer + (60+(j*64)))) = 0; // CONFERIR <--------------------------------
+						escreveCluster(clusterPai, buffer);
+						free(buffer);
+						return 0;
+					}
+				}
+			}
+			free(buffer);
+		}
+	}
+
 	return -1;
 }
 
@@ -118,13 +152,17 @@ int chdir2(char *pathname)
 	// Abre ele
 	// coloca em clusterAtual o cluster desse diretorio
 	// retorna 0
-	return -1;
+	DWORD cluster = clusterFromPath(pathname);
+	if(cluster < 0)
+		return -1;
+	clusterAtual = cluster;
+	return 0;
 }
 int getcwd2(char *pathname, int size)
 {
 	// a partir do diretorio inicial
 	// navega ate o diretorio atual, compilando os nomes de cada diretorio passado no caminho
-	
+
 	// Retorna erro se o pathname fica maior que a informacao passada pela variavel size
 	return -1;
 }
@@ -135,6 +173,30 @@ DIR2 opendir2(char *pathname)
 	// pega informacoes do diretorio e coloca no vetor de diretorios abertos
 	// coloca o ponteiroAtual do diretorio pra 0
 	// retorna a posicao do vetor de diretorios abertos
+	char pathDiretorioPai[MAX_FILE_NAME_SIZE+1], nomedir[MAX_FILE_NAME_SIZE+1];
+
+	diretorioPai(pathname, pathDiretorioPai); // FALTA <----------------------------
+	nomeDiretorioDoPath(pathname, nomedir); // FALTA <----------------------------
+
+	DWORD cluster = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
+	DIR2 handle;
+	Registro buffer;
+	if(cluster > 0)
+	{
+		handle = buscaHandleDirLivre();
+		if (handle >= 0)
+		{
+			leEntradaDiretorioPorNome(cluster, nomeDir, &buffer);
+			diretorios[handle].registro.TypeVal=buffer.TypeVal;
+			strcpy(diretorios[handle].registro.name, nometeste);
+			diretorios[handle].registro.bytesFileSize=buffer.bytesFileSize;
+			diretorios[handle].registro.clustersFileSize=buffer.clustersFileSize;
+			diretorios[handle].registro.firstCluster=buffer.firstCluster;
+			diretorios[handle].status = OPEN;
+			diretorios[handle].currentPointers = 0;
+			return 0;
+		}
+	}
 	return -1;
 }
 
@@ -154,9 +216,11 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry)
 
 int closedir2(DIR2 handle)
 {
-	// busca no vetor de diretorios com o handle
-	// retira ele do vetor;
-	// acho que eh soh isso
+	if(handleDIRValido(handle))
+	{
+		diretorios[handle].status = CLOSED;
+		return 0;
+	}
 	return -1;
 }
 int ln2(char *linkname, char *filename);

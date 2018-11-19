@@ -304,7 +304,7 @@ int leEntradaDiretorio(DIR2 handle, Registro* registro)
 {
 	char *buffer;
 	int i;
-	
+
 	buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
 	DWORD cluster = diretorios[handle].Register.firstCluster;
 	int ponteiro = diretorios[handle].currentPointer;
@@ -325,7 +325,7 @@ int leEntradaDiretorio(DIR2 handle, Registro* registro)
 		}
 	}
 	return -1;
-	
+
 }
 
 // retorna 0 se não existe diretorio com o nome especificado, se existe retorna 1
@@ -351,4 +351,68 @@ int existeDiretorioComNome(char* nome)
 		return 0;
 	}
 	return -1;
+}
+
+// retorna 0 se diretorio  nao esta vazio, se nao esta vazio retorna 1
+int diretorioEstaVazio(char *path)
+{
+	char *buffer;
+	int i;
+	int j;
+	buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
+	DWORD cluster = clusterFromPath(path); // FALTA <----------------------------------------------------
+	if(buffer!=0)
+	{
+		if (cluster > 0)
+		{
+			leCluster(cluster,buffer);
+
+			for(j=2;j<(SECTOR_SIZE*superbloco.SectorsPerCluster)/64;j++) // Começa em 2 para pular '.' e '..', sempre presentes
+			{
+				if(buffer[64*j] != TYPEVAL_INVALIDO)
+				{
+					free(buffer);
+					return 0;
+				}
+			}
+			free(buffer);
+			return 1;
+		}
+	}
+	return -1;
+}
+
+int leEntradaDiretorioPorNome(DWORD cluster, char* nome, Registro* registro)
+{
+	char *buffer, nometeste[50];
+	int i;
+
+	buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
+
+	if(buffer!=0)
+	{
+		{
+			leCluster(cluster,buffer);
+			for(j=2;j<(SECTOR_SIZE*superbloco.SectorsPerCluster)/64;j++)
+			{
+				if(buffer[64*j] == TYPEVAL_DIRETORIO)
+				{
+					for(i=0;i<50;i++)
+						nometeste[i]=buffer[(1+i)+(j*64)];
+					if (!strcmp(nome, nometeste))
+					{
+						registro.TypeVal=buffer[64*j];
+						strcpy(registro.name, nometeste);
+						registro.bytesFileSize=*((DWORD*)(buffer + (52+(j*64))));
+						registro.clustersFileSize=*((DWORD*)(buffer + (56+(j*64))));
+						registro.firstCluster=*((DWORD*)(buffer + (60+(j*64))));
+						return 0;
+					}
+				}
+			}
+			free(buffer);
+		}
+	}
+	return -1;
+
 }
