@@ -377,6 +377,10 @@ void novoArquivo(char *filename)
 }
 DWORD clusterFromPath(char *path)
 {
+	if(!strcmp(path, "/"))
+	{
+		return superbloco.RootDirCluster;
+	}
   int i,j, tamanhoPath, sucesso = 1;
   char *aux;
   DWORD clusterAux = superbloco.RootDirCluster;
@@ -476,6 +480,11 @@ int leEntradaDiretorioPorNome(DWORD cluster, char* nome, Registro* registro)
 
 int diretorioPai(char *pathname, char *pathDiretorioPai)
 {
+	if(!strcmp(pathname, "/"))
+	{
+		stpcpy(pathDiretorioPai, "/");
+		return 0;
+	}
     char *aux, *diretorioPai;
     int i, tamanhoPath, ultimaBarra;
     tamanhoPath = strlen(pathname);
@@ -507,6 +516,11 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
 
 int nomeDiretorioDoPath(char *pathname, char *nomeDir)
 {
+	if(!strcmp(pathname, "/"))
+	{
+		stpcpy(pathDiretorioPai, "/");
+		return 0;
+	}
   char aux[MAX_FILE_NAME_SIZE+1], *nomeDiretorio;
   int i, tamanhoPath, ultimaBarra;
   tamanhoPath = strlen(pathname);
