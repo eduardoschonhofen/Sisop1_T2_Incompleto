@@ -512,7 +512,7 @@ int nomeDiretorioDoPath(char *pathname, char *nomeDir)
   int i, tamanhoPath, ultimaBarra;
   tamanhoPath = strlen(pathname);
   strcpy(aux,pathname);
-  nomeDiretorio = (char*)malloc(sizeof(tamanhoPath));
+  nomeDiretorio = (char*)malloc(tamanhoPath*sizeof(char));
 
   if(aux[0] == '/') //absoluto
   {
