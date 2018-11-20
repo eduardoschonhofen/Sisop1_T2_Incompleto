@@ -164,7 +164,7 @@ FILE2 buscaHandleArquivoLivre()
   FILE2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_ARQUIVOS_ABERTOS;freeHandle++)
   {
-    if(arquivos[freeHandle].Register.TypeVal = TYPEVAL_INVALIDO)
+    if(arquivos[freeHandle].Register.TypeVal == TYPEVAL_INVALIDO)
       return freeHandle;
   }
   return -1;
@@ -175,7 +175,7 @@ DIR2 buscaHandleDirLivre()
   DIR2  freeHandle;
   for(freeHandle = 0; freeHandle < MAX_DIRETORIOS_ABERTOS;freeHandle++)
   {
-    if(diretorios[freeHandle].Register.TypeVal = TYPEVAL_INVALIDO)
+    if(diretorios[freeHandle].Register.TypeVal == TYPEVAL_INVALIDO)
       return freeHandle;
   }
   return -1;
