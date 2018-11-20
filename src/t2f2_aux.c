@@ -479,8 +479,8 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
     char *aux, *diretorioPai;
     int i, tamanhoPath, ultimaBarra;
     tamanhoPath = strlen(pathname);
-    aux = (char*)malloc(sizeof(tamanhoPath));
-    diretorioPai = (char*)malloc(sizeof(tamanhoPath));
+    aux = (char*)malloc(tamanhoPath);
+    diretorioPai = (char*)malloc(tamanhoPath);
     strcpy(aux, pathname);
 
     if(aux[0] == '/') //absoluto
@@ -497,7 +497,6 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
         diretorioPai[i] = aux[i];
       }
       diretorioPai[i] = "\0";
-
       strcpy(pathDiretorioPai, diretorioPai);
       return 0;
     }
@@ -512,7 +511,7 @@ int nomeDiretorioDoPath(char *pathname, char *nomeDir)
   int i, tamanhoPath, ultimaBarra;
   tamanhoPath = strlen(pathname);
   strcpy(aux,pathname);
-  nomeDiretorio = (char*)malloc(tamanhoPath*sizeof(char));
+  nomeDiretorio = (char*)malloc(tamanhoPath);
 
   if(aux[0] == '/') //absoluto
   {
