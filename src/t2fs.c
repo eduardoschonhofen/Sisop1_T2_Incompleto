@@ -67,6 +67,7 @@ int close2 (FILE2 handle)
 }
 int read2(FILE2 handle, char *buffer, int size)
 {
+  iniciarT2FS()
   char *aux;
   aux=(char*)malloc(size);
   if(handle<0||handle>10 || arquivos[handle].status==0)
@@ -93,6 +94,7 @@ int seek2 (FILE2 handle, unsigned int offset)
 
 int mkdir2 (char *caminho)
 {
+  iniciarT2FS()
 	char nomedir[MAX_CHAR_NOME];
 	Registro novodir;
 	char *aux;
@@ -128,6 +130,7 @@ int rmdir2(char * pathname)
 	//Libera a entrada de diretorio no diretorio pai
 
 	//Retorna zero
+  iniciarT2FS()
 	int i, j;
 	char *aux, *buffer;
 	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
@@ -180,6 +183,7 @@ int chdir2(char *pathname)
 	// Abre ele
 	// coloca em clusterAtual o cluster desse diretorio
 	// retorna 0
+  iniciarT2FS()
 	char *aux;
 	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
 	strcpy(aux, pathname);
@@ -193,6 +197,7 @@ int chdir2(char *pathname)
 }
 int getcwd2(char *pathname, int size)
 {
+  iniciarT2FS()
 	// a partir do diretorio inicial
 	// navega ate o diretorio atual, compilando os nomes de cada diretorio passado no caminho
 
@@ -252,6 +257,7 @@ printf("%d",strlen(aux));
 
 int readdir2 (DIR2 handle, DIRENT2 *dentry)
 {
+  iniciarT2FS()
 	DWORD cluster = diretorios[handle].Register.firstCluster;
 	Registro registro;
 	if(!leEntradaDiretorio(handle, &registro))
@@ -266,6 +272,7 @@ int readdir2 (DIR2 handle, DIRENT2 *dentry)
 
 int closedir2(DIR2 handle)
 {
+  iniciarT2FS()
 	if(handleDIRValido(handle))
 	{
 		diretorios[handle].status = CLOSED;
@@ -275,5 +282,6 @@ int closedir2(DIR2 handle)
 }
 int ln2(char *linkname, char *filename)
 {
+  iniciarT2FS()
   return -1;
 }
