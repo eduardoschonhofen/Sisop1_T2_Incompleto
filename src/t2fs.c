@@ -31,22 +31,28 @@ FILE2 create2(char *filename)
   if((int)cluster<0)
   {
   //novoArquivo(filename);
-
+  return -1;
   }
   else
   {
   //zeraArquivo(cluster);
-
+  return -1;
   }
 
-  return;
+  return -1;
 
 
 
 }
 
-int delete2(char *filename);
-FILE2 open2(char *filename);
+int delete2(char *filename)
+{
+  return -1;
+}
+FILE2 open2(char *filename)
+{
+  return -1;
+}
 int close2 (FILE2 handle)
 {
   if(handle<0||handle>10)
@@ -55,6 +61,7 @@ int close2 (FILE2 handle)
   {
 
     arquivos[handle].status=0;
+    return 0;
   }
 
 }
@@ -63,17 +70,26 @@ int read2(FILE2 handle, char *buffer, int size)
   char *aux;
   aux=(char*)malloc(size);
   if(handle<0||handle>10 || arquivos[handle].status==0)
-    return 0;
+    return -1;
   else
   {
 
-    return;
+    return -1;
   }
 
 }
-int write2(FILE2 handle, char *buffer, int size);
-int truncate2(FILE2 handle);
-int seek2 (FILE2 handle, unsigned int offset);
+int write2(FILE2 handle, char *buffer, int size)
+{
+  return -1;
+}
+int truncate2(FILE2 handle)
+{
+  return -1;
+}
+int seek2 (FILE2 handle, unsigned int offset)
+{
+  return -1;
+}
 
 int mkdir2 (char *caminho)
 {
@@ -186,7 +202,7 @@ int getcwd2(char *pathname, int size)
 		strcpy(pathname, currentPath);
 		return 0;
 	}
-	
+
 	return -1;
 }
 DIR2 opendir2(char *pathname)
@@ -249,4 +265,7 @@ int closedir2(DIR2 handle)
 	}
 	return -1;
 }
-int ln2(char *linkname, char *filename);
+int ln2(char *linkname, char *filename)
+{
+  return -1;
+}

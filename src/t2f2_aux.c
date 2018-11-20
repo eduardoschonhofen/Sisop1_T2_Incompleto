@@ -364,7 +364,7 @@ void novoArquivo(char *filename)
   Registro registro;
 
   registro.TypeVal = 1;
-  nomeDiretorioDoPath(filename,nome)
+  nomeDiretorioDoPath(filename,nome);
   strcpy(registro.name,nome);
   registro.bytesFileSize=0;
   registro.clustersFileSize=1;
