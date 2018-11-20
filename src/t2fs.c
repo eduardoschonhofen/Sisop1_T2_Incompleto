@@ -218,14 +218,21 @@ DIR2 opendir2(char *pathname)
 	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
 	strcpy(aux, pathname);
 	trataPathName(aux);
+  puts("BBB");
+  puts(aux);
+  puts(pathDiretorioPai);
 	diretorioPai(aux, pathDiretorioPai); // FALTA <----------------------------
-	nomeDiretorioDoPath(aux, nomedir); // FALTA <----------------------------
-	DWORD cluster = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
+puts("AAA");
+  nomeDiretorioDoPath(aux, nomedir); // FALTA <----------------------------
+
+  DWORD cluster = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
 	DIR2 handle;
 	Registro buffer;
+  puts("AAA");
 	if(cluster > 0)
 	{
 		handle = buscaHandleDirLivre();
+    puts("CCC");
 		if (handle >= 0)
 		{
 			leEntradaDiretorioPorNome(cluster, nomedir, &buffer);
