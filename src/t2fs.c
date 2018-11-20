@@ -27,15 +27,15 @@ FILE2 create2(char *filename)
 
   Registro registro[50000];
   iniciarT2FS();
-  DWORD cluster = clusterFromPath(filename)
+  DWORD cluster = clusterFromPath(filename);
   if((int)cluster<0)
   {
-  novoArquivo(filename);
+  //novoArquivo(filename);
 
   }
   else
   {
-  zeraArquivo(cluster);
+  //zeraArquivo(cluster);
 
   }
 
@@ -81,7 +81,7 @@ int mkdir2 (char *caminho)
 	Registro novodir;
 	char *aux;
 	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
-	strcpy(aux, pathname);
+	strcpy(aux, caminho);
 	trataPathName(aux);
 	nomeDiretorioDoPath(aux, nomedir); // FALTA TERMINAR ESSA FUNÇÃO, PRA PODERMOS TESTAR <---------------------------------------------
 	if(!existeDiretorioComNome(nomedir)) // Testa se já existe um diretorio nesse caminho com esse nome
@@ -91,7 +91,7 @@ int mkdir2 (char *caminho)
 		{
 			novodir.TypeVal = TYPEVAL_DIRETORIO;
 			strcpy(novodir.name, nomedir);
-			novodir.bytesFileSize = TAMANHO_BLOCO;		// colocação das infos do Registro do diretorio
+			novodir.bytesFileSize = superbloco.SectorsPerCluster * SECTOR_SIZE;		// colocação das infos do Registro do diretorio
 			novodir.clustersFileSize = 1;
 			escreveFAT(novodir.firstCluster, 0xFFFFFFFF);	// Marcando na FAT como unico cluster desse arquivo (pois os diretorios sao limitados a um cluster, eu acho)
 			return 0;
@@ -112,8 +112,10 @@ int rmdir2(char * pathname)
 	//Libera a entrada de diretorio no diretorio pai
 
 	//Retorna zero
-	char *aux;
+	int i, j;
+	char *aux, *buffer;
 	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
+	buffer = (char*)malloc(superbloco.SectorsPerCluster*SECTOR_SIZE*1024);
 	strcpy(aux, pathname);
 	trataPathName(aux);
 	char pathDiretorioPai[MAX_FILE_NAME_SIZE+1], nomedir[MAX_FILE_NAME_SIZE+1], nometeste[50];
@@ -194,6 +196,7 @@ DIR2 opendir2(char *pathname)
 	// pega informacoes do diretorio e coloca no vetor de diretorios abertos
 	// coloca o ponteiroAtual do diretorio pra 0
 	// retorna a posicao do vetor de diretorios abertos
+	iniciarT2FS();
 	char pathDiretorioPai[MAX_FILE_NAME_SIZE+1], nomedir[MAX_FILE_NAME_SIZE+1];
 	char *aux;
 	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
@@ -201,7 +204,6 @@ DIR2 opendir2(char *pathname)
 	trataPathName(aux);
 	diretorioPai(aux, pathDiretorioPai); // FALTA <----------------------------
 	nomeDiretorioDoPath(aux, nomedir); // FALTA <----------------------------
-
 	DWORD cluster = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
 	DIR2 handle;
 	Registro buffer;
