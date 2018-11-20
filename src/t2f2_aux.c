@@ -479,10 +479,10 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
     char *aux, *diretorioPai;
     int i, tamanhoPath, ultimaBarra;
     tamanhoPath = strlen(pathname);
-    aux = (char*)malloc(tamanhoPath);
-    diretorioPai = (char*)malloc(tamanhoPath);
+    aux = (char*)malloc(tamanhoPath+1);
+    diretorioPai = (char*)malloc(tamanhoPath+1);
     strcpy(aux, pathname);
-
+    printf("%d",strlen(aux));
     if(aux[0] == '/') //absoluto
     {
       for(i = 1;i < tamanhoPath + 1; i++)
@@ -507,30 +507,36 @@ int diretorioPai(char *pathname, char *pathDiretorioPai)
 
 int nomeDiretorioDoPath(char *pathname, char *nomeDir)
 {
-  char *aux, *nomeDiretorio;
+  char aux[MAX_FILE_NAME_SIZE+1], *nomeDiretorio;
   int i, tamanhoPath, ultimaBarra;
   tamanhoPath = strlen(pathname);
+
   strcpy(aux,pathname);
-  nomeDiretorio = (char*)malloc(tamanhoPath);
+
+  nomeDiretorio = (char*)malloc(tamanhoPath+1);
 
   if(aux[0] == '/') //absoluto
   {
-    for(i = 1;i < tamanhoPath + 1; i++)
+    for(i = 0;i < tamanhoPath + 1; i++)
     {
       if(aux[i] == '/')
       {
+
+
         ultimaBarra = i;
       }
     }
+
     i = 0;
     ultimaBarra++;
-    while(aux[ultimaBarra] != "\0")
+    while(aux[ultimaBarra] != '\0')
     {
       nomeDiretorio[i] = aux[ultimaBarra];
       i++;
       ultimaBarra++;
     }
-    nomeDiretorio[i] = "\0";
+
+    nomeDiretorio[i] = '\0';
     strcpy(nomeDir, nomeDiretorio);
   return 0;
 

@@ -218,13 +218,14 @@ DIR2 opendir2(char *pathname)
 	aux = (char*) malloc(sizeof(MAX_FILE_NAME_SIZE+1));
 	strcpy(aux, pathname);
 	trataPathName(aux);
+  printf("%d",strlen(aux));
   puts("BBB");
   puts(aux);
   puts(pathDiretorioPai);
 	diretorioPai(aux, pathDiretorioPai); // FALTA <----------------------------
 puts("AAA");
   nomeDiretorioDoPath(aux, nomedir); // FALTA <----------------------------
-
+printf("%d",strlen(aux));
   DWORD cluster = clusterFromPath(pathDiretorioPai); // FALTA <----------------------------
 	DIR2 handle;
 	Registro buffer;
